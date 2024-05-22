@@ -237,7 +237,6 @@ public class Ssitema extends javax.swing.JFrame {
         jButton23 = new javax.swing.JButton();
         jLabel32 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1250, 680));
@@ -1134,21 +1133,6 @@ public class Ssitema extends javax.swing.JFrame {
         jLabel11.setText("jLabel11");
         getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, 810));
 
-        jPanel8.setOpaque(false);
-
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 270, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, -100, 830, 270));
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1665,7 +1649,6 @@ public class Ssitema extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
