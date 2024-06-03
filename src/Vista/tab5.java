@@ -15,6 +15,7 @@ public class tab5 extends javax.swing.JPanel {
      */
     public tab5() {
         initComponents();
+        txtIdVenta.setVisible(false);
     }
 
     /**
@@ -31,6 +32,7 @@ public class tab5 extends javax.swing.JPanel {
         btnPdfVentas = new javax.swing.JButton();
         txtIdVenta = new javax.swing.JTextField();
 
+        setOpaque(false);
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         TableVentas.setModel(new javax.swing.table.DefaultTableModel(

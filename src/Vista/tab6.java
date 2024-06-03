@@ -39,6 +39,7 @@ public class tab6 extends javax.swing.JPanel {
         jButton23 = new javax.swing.JButton();
         jLabel32 = new javax.swing.JLabel();
 
+        setOpaque(false);
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel27.setText("DNI");

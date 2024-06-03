@@ -86,13 +86,9 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Correo Electrónico");
 
-        txtCorreo.setText("jTextField1");
-
         jLabel4.setFont(new java.awt.Font("Raleway Black", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Contraseña");
-
-        txtPass.setText("jPasswordField1");
 
         jButton1.setText("Iniciar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {

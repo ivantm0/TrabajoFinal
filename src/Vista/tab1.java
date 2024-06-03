@@ -4,17 +4,56 @@
  */
 package Vista;
 
+import Modelo.Cliente;
+import Modelo.ClienteDao;
+import Modelo.Detalle;
+import Modelo.Productos;
+import Modelo.ProductosDao;
+import Modelo.Proveedor;
+import Modelo.ProveedorDao;
+import Modelo.Venta;
+import Modelo.VentaDao;
+import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ivant
  */
 public class tab1 extends javax.swing.JPanel {
 
-    /**
-     * Creates new form tab1
-     */
-    public tab1() {
+    Cliente cl = new Cliente();
+    ClienteDao client = new ClienteDao();
+    Proveedor pr = new Proveedor();
+    ProveedorDao prDao = new ProveedorDao();
+    Productos pro = new Productos();
+    ProductosDao proDao = new ProductosDao();
+    Venta v = new Venta();
+    VentaDao vDao = new VentaDao();
+    Detalle dv = new Detalle();
+    DefaultTableModel modelo = new DefaultTableModel();
+    DefaultTableModel tmp = new DefaultTableModel();
+    int item;
+    double totalPagar = 0.00;
+    
+    public tab1() throws ClassNotFoundException, SQLException {
         initComponents();
+        txtIdPro.setVisible(false);
+        txtDireccionCV.setVisible(false);
+        txtRazonCV.setVisible(false);
+        txtTelefonoCV.setVisible(false);
+        LabelVendedor.setVisible(false);
+        
+        LimpiarTable();
+        RegistrarVenta();
+        ActualizarStock();
     }
 
     /**
@@ -56,42 +95,42 @@ public class tab1 extends javax.swing.JPanel {
         setOpaque(false);
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel3.setFont(new java.awt.Font("Raleway", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Raleway", 0, 16)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Código");
-        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, -1, -1));
+        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, -1, -1));
 
-        jLabel4.setFont(new java.awt.Font("Raleway", 0, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Raleway", 0, 16)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Descripción");
-        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, -1, -1));
+        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, -1, -1));
 
-        jLabel5.setFont(new java.awt.Font("Raleway", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Raleway", 0, 16)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Cantidad");
-        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 10, -1, -1));
+        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 30, -1, -1));
 
-        jLabel6.setFont(new java.awt.Font("Raleway", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Raleway", 0, 16)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Precio");
-        add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, -1, -1));
+        add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 30, -1, -1));
 
-        jLabel7.setFont(new java.awt.Font("Raleway", 0, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Raleway", 0, 16)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Stock Disponible");
-        add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, -1, -1));
+        add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 30, -1, -1));
 
-        btnEliminarVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/eliminar.png"))); // NOI18N
+        btnEliminarVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/eliminar_1.png"))); // NOI18N
         btnEliminarVenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarVentaActionPerformed(evt);
             }
         });
-        add(btnEliminarVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 270, -1, -1));
-        add(txtStockDisponible, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 160, -1, -1));
+        add(btnEliminarVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 30, 50, 50));
+        add(txtStockDisponible, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 60, 70, -1));
 
         txtPrecioVenta.setEditable(false);
-        add(txtPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 100, -1, -1));
+        add(txtPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 60, 70, -1));
 
         txtCodigoVenta.setToolTipText("");
         txtCodigoVenta.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -99,17 +138,17 @@ public class tab1 extends javax.swing.JPanel {
                 txtCodigoVentaKeyPressed(evt);
             }
         });
-        add(txtCodigoVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
+        add(txtCodigoVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, 80, -1));
 
         txtDescripcionVenta.setToolTipText("");
-        add(txtDescripcionVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 210, -1, -1));
+        add(txtDescripcionVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 60, 170, -1));
 
         txtCantidadVenta.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtCantidadVentaKeyPressed(evt);
             }
         });
-        add(txtCantidadVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, -1, -1));
+        add(txtCantidadVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 60, 70, -1));
 
         TableVenta.setBackground(new java.awt.Color(10, 38, 72));
         TableVenta.setForeground(new java.awt.Color(10, 38, 72));
@@ -123,76 +162,175 @@ public class tab1 extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(TableVenta);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(372, 10, 470, -1));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 830, 260));
 
-        jLabel8.setFont(new java.awt.Font("Raleway", 0, 14)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Raleway", 0, 16)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("DNI");
-        add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, -1, -1));
+        add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 380, -1, -1));
 
-        jLabel9.setFont(new java.awt.Font("Raleway", 0, 14)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Raleway", 0, 16)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Nombre");
-        add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 50, -1, -1));
+        add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 380, -1, -1));
 
         txtDNIVenta.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtDNIVentaKeyPressed(evt);
             }
         });
-        add(txtDNIVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 360, -1, -1));
+        add(txtDNIVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 380, 110, -1));
 
         txtNombreClienteVenta.setEditable(false);
-        add(txtNombreClienteVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 260, -1, -1));
+        add(txtNombreClienteVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 380, 130, -1));
 
-        btnGenerarVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/print.png"))); // NOI18N
+        btnGenerarVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/impresion.png"))); // NOI18N
         btnGenerarVenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGenerarVentaActionPerformed(evt);
             }
         });
-        add(btnGenerarVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 270, -1, -1));
+        add(btnGenerarVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 370, 50, 50));
 
-        jLabel10.setFont(new java.awt.Font("Raleway", 0, 14)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("Raleway", 0, 16)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/money.png"))); // NOI18N
-        jLabel10.setText("Total a pagar");
-        add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 330, -1, -1));
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/metodo-de-pago.png"))); // NOI18N
+        jLabel10.setText("  Total a pagar");
+        add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 380, -1, -1));
 
-        LabelTotal.setFont(new java.awt.Font("Raleway", 0, 14)); // NOI18N
+        LabelTotal.setFont(new java.awt.Font("Raleway", 0, 16)); // NOI18N
         LabelTotal.setForeground(new java.awt.Color(255, 255, 255));
         LabelTotal.setText("---");
-        add(LabelTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
-        add(txtTelefonoCV, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 370, -1, -1));
-        add(txtDireccionCV, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 280, -1, -1));
-        add(txtRazonCV, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 400, -1, -1));
-        add(txtIdPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 150, -1, -1));
+        add(LabelTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 390, -1, -1));
+        add(txtTelefonoCV, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 400, 10, -1));
+        add(txtDireccionCV, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 400, 10, -1));
+        add(txtRazonCV, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 400, 10, -1));
+        add(txtIdPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 10, 30, -1));
 
         LabelVendedor.setFont(new java.awt.Font("Raleway", 0, 14)); // NOI18N
         LabelVendedor.setForeground(new java.awt.Color(255, 255, 255));
         LabelVendedor.setText("Vendedor");
-        add(LabelVendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, -1, -1));
+        add(LabelVendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 380, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEliminarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarVentaActionPerformed
-
+        modelo = (DefaultTableModel) TableVenta.getModel();
+        modelo.removeRow(TableVenta.getSelectedRow());
+        TotalPagar();
+        txtCodigoVenta.requestFocus();
     }//GEN-LAST:event_btnEliminarVentaActionPerformed
 
     private void txtCodigoVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoVentaKeyPressed
-
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            if(!"".equals(txtCodigoVenta.getText())){
+                String cod = txtCodigoVenta.getText();
+                try {
+                    pro = proDao.BuscarPro(cod);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if(pro.getNombre() != null){
+                    txtDescripcionVenta.setText(""+pro.getNombre());
+                    txtPrecioVenta.setText(""+pro.getPrecio());
+                    txtStockDisponible.setText(""+pro.getStock());
+                    txtCantidadVenta.requestFocus();
+                }else{
+                    LimpiarVenta();
+                    txtCodigoVenta.requestFocus();
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Ingrese el codigo del producto");
+                txtCodigoVenta.requestFocus();
+            }
+        }
     }//GEN-LAST:event_txtCodigoVentaKeyPressed
 
     private void txtCantidadVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadVentaKeyPressed
-
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            if(!"".equals(txtCantidadVenta.getText())){
+                String cod = txtCodigoVenta.getText();
+                String descripcion = txtDescripcionVenta.getText();
+                int cant = Integer.parseInt(txtCantidadVenta.getText());
+                double precio = Double.parseDouble(txtPrecioVenta.getText());
+                double total = cant * precio;
+                int stock = Integer.parseInt(txtStockDisponible.getText());
+                if(stock >= cant){
+                    item = item + 1;
+                    tmp = (DefaultTableModel) TableVenta.getModel();
+                    for(int i=0; i<TableVenta.getRowCount(); i++){
+                        if(TableVenta.getValueAt(i,1).equals(txtDescripcionVenta.getText())){
+                            JOptionPane.showMessageDialog(null, "Elproducto ya esta registrado");
+                            return;
+                        }
+                    }
+                    ArrayList lista = new ArrayList();
+                    lista.add(item);
+                    lista.add(cod);
+                    lista.add(descripcion);
+                    lista.add(cant);
+                    lista.add(precio);
+                    lista.add(total);
+                    Object[] o = new Object[5];
+                    o[0] = lista.get(1);
+                    o[1] = lista.get(2);
+                    o[2] = lista.get(3);
+                    o[3] = lista.get(4);
+                    o[4] = lista.get(5);
+                    tmp.addRow(o);
+                    TableVenta.setModel(tmp);
+                    TotalPagar();
+                    LimpiarVenta();
+                    txtCodigoVenta.requestFocus();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Stock no disponible");
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Ingrese cantidad");
+            }
+        }
     }//GEN-LAST:event_txtCantidadVentaKeyPressed
 
     private void txtDNIVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDNIVentaKeyPressed
-
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            if(!"".equals(txtDNIVenta.getText())){
+                String dni = txtDNIVenta.getText();
+                try {
+                    cl = client.BuscarCliente(dni);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if(cl.getNombre() != null){
+                    txtNombreClienteVenta.setText(""+cl.getNombre());
+                    txtTelefonoCV.setText(""+cl.getTelefono());
+                    txtDireccionCV.setText(""+cl.getDireccion());
+                    txtRazonCV.setText(""+cl.getRazon());
+                }else{
+                    txtDNIVenta.setText("");
+                    JOptionPane.showMessageDialog(null, "El cliente no existe");
+                }
+            }
+        }
     }//GEN-LAST:event_txtDNIVentaKeyPressed
 
     private void btnGenerarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarVentaActionPerformed
-
+        try {
+            RegistrarVenta();
+            RegistrarDetalle();
+            ActualizarStock();
+            LimpiarTableVenta();
+            LimpiarClienteVenta();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnGenerarVentaActionPerformed
+
+    public JTable getTableVenta() {
+        return TableVenta;
+    }
+
+    public void setTableVenta(JTable TableVenta) {
+        this.TableVenta = TableVenta;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -222,4 +360,81 @@ public class tab1 extends javax.swing.JPanel {
     private javax.swing.JTextField txtStockDisponible;
     private javax.swing.JTextField txtTelefonoCV;
     // End of variables declaration//GEN-END:variables
+    
+    public void TotalPagar(){
+        totalPagar = 0.00;
+        int numFila = TableVenta.getRowCount();
+        for(int i=0; i<numFila; i++){
+            double cal = Double.parseDouble(String.valueOf(TableVenta.getModel().getValueAt(i,4)));
+            totalPagar = totalPagar + cal;
+        }
+        LabelTotal.setText(String.format("%.2f", totalPagar));
+    }
+    
+    public void LimpiarVenta(){
+        txtCodigoVenta.setText("");
+        txtDescripcionVenta.setText("");
+        txtCantidadVenta.setText("");
+        txtStockDisponible.setText("");
+        txtPrecioVenta.setText("");
+        txtIdPro.setText("");
+    }
+    
+    public void RegistrarVenta() throws ClassNotFoundException{
+        String cliente = txtNombreClienteVenta.getText();
+        String vendedor = LabelVendedor.getText();
+        double cant = totalPagar;
+        v.setCliente(cliente);
+        v.setVendedor(vendedor);
+        v.setTotal(cant);
+        vDao.RegistrarVenta(v);
+    }
+    
+    public void RegistrarDetalle() throws ClassNotFoundException{
+        int id = vDao.IdVenta();
+        for(int i=0; i<TableVenta.getRowCount(); i++){
+            String cod = TableVenta.getValueAt(i, 0).toString();
+            int cant = Integer.parseInt(TableVenta.getValueAt(i, 2).toString());
+            double precio = Double.parseDouble(TableVenta.getValueAt(i, 3).toString());
+            dv.setCod_pro(cod);
+            dv.setPrecio(precio);
+            dv.setCantidad(cant);
+            dv.setId(id);
+            vDao.RegistrarDetalle(dv);
+        }
+    }
+    
+    public void ActualizarStock() throws ClassNotFoundException{
+        for (int i = 0; i < TableVenta.getRowCount(); i++) {
+            String cod = TableVenta.getValueAt(i, 0).toString();
+            int cant  = Integer.parseInt(TableVenta.getValueAt(i, 2).toString());
+            pro = proDao.BuscarPro(cod);
+            int StockActual = pro.getStock() - cant;
+            vDao.ActualizarStock(StockActual, cod);
+        }
+    }
+    
+    public void LimpiarTableVenta(){
+        tmp = (DefaultTableModel) TableVenta.getModel();
+        int fila = TableVenta.getRowCount();
+        for (int i = 0; i < fila; i++) {
+            tmp.removeRow(0);
+        }
+    }
+    
+    public void LimpiarClienteVenta(){
+        txtDNIVenta.setText("");
+        txtNombreClienteVenta.setText("");
+        txtTelefonoCV.setText("");
+        txtDireccionCV.setText("");
+        txtRazonCV.setText("");
+    }
+    
+    public void LimpiarTable(){
+        int aux = modelo.getRowCount();
+        for(int i=0; i<aux; aux--){
+            modelo.removeRow(aux-1);
+        }
+    }
+
 }

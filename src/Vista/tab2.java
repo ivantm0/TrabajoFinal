@@ -4,17 +4,47 @@
  */
 package Vista;
 
+import Modelo.Cliente;
+import Modelo.ClienteDao;
+import Modelo.Detalle;
+import Modelo.Productos;
+import Modelo.ProductosDao;
+import Modelo.Proveedor;
+import Modelo.ProveedorDao;
+import Modelo.Venta;
+import Modelo.VentaDao;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ivant
  */
 public class tab2 extends javax.swing.JPanel {
 
-    /**
-     * Creates new form tab2
-     */
-    public tab2() {
+    Cliente cl = new Cliente();
+    ClienteDao client = new ClienteDao();
+    Proveedor pr = new Proveedor();
+    ProveedorDao prDao = new ProveedorDao();
+    Productos pro = new Productos();
+    ProductosDao proDao = new ProductosDao();
+    Venta v = new Venta();
+    VentaDao vDao = new VentaDao();
+    Detalle dv = new Detalle();
+    DefaultTableModel modelo = new DefaultTableModel();
+    DefaultTableModel tmp = new DefaultTableModel();
+    int item;
+    
+    public tab2() throws ClassNotFoundException, SQLException {
         initComponents();
+        txtIdCliente.setVisible(false);
+        LimpiarTable();
+        ListarCliente();
     }
 
     /**
@@ -44,36 +74,42 @@ public class tab2 extends javax.swing.JPanel {
         btnNuevoCliente = new javax.swing.JButton();
         txtIdCliente = new javax.swing.JTextField();
 
+        setOpaque(false);
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel12.setFont(new java.awt.Font("Raleway", 1, 16)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
         jLabel12.setText("DNI:");
-        add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, -1, -1));
+        add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, -1, -1));
 
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel13.setFont(new java.awt.Font("Raleway", 1, 16)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("Nombre:");
-        add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, -1, -1));
+        add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, -1, -1));
 
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel14.setText("Télefono:");
-        add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 110, -1, -1));
+        jLabel14.setFont(new java.awt.Font("Raleway", 1, 16)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setText("Teléfono:");
+        add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, -1, -1));
 
-        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel15.setFont(new java.awt.Font("Raleway", 1, 16)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(255, 255, 255));
         jLabel15.setText("Dirección:");
-        add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 50, -1, -1));
+        add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, -1, -1));
 
-        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel16.setFont(new java.awt.Font("Raleway", 1, 16)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
         jLabel16.setText("Motivo:");
-        add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 230, -1, -1));
+        add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, -1));
 
         txtDNICliente.setToolTipText("");
-        add(txtDNICliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 230, -1, -1));
+        add(txtDNICliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 100, -1));
 
         txtNombreCliente.setToolTipText("");
-        add(txtNombreCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 160, -1, -1));
-        add(txtTelefonoCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 150, -1, -1));
-        add(txtDireccionCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 380, -1, -1));
-        add(txtRazonCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 300, -1, -1));
+        add(txtNombreCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 130, 130, -1));
+        add(txtTelefonoCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 120, -1));
+        add(txtDireccionCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 210, 150, -1));
+        add(txtRazonCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 250, 150, -1));
 
         TableCliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -83,51 +119,56 @@ public class tab2 extends javax.swing.JPanel {
                 "ID", "DNI", "NOMBRE", "TELÉFONO", "DIRECCIÓN", "MOTIVO"
             }
         ));
+        TableCliente.setRowHeight(20);
         TableCliente.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TableClienteMouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(TableCliente);
+        if (TableCliente.getColumnModel().getColumnCount() > 0) {
+            TableCliente.getColumnModel().getColumn(0).setPreferredWidth(25);
+            TableCliente.getColumnModel().getColumn(1).setMaxWidth(50);
+        }
 
-        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 10, -1, -1));
+        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(302, 50, 590, 350));
 
-        btnGuardarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/GuardarTodo.png"))); // NOI18N
+        btnGuardarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/agregar-archivo.png"))); // NOI18N
         btnGuardarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnGuardarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarClienteActionPerformed(evt);
             }
         });
-        add(btnGuardarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 360, -1, -1));
+        add(btnGuardarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, 50, 50));
 
-        btnEditarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Actualizar (2).png"))); // NOI18N
+        btnEditarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/editar.png"))); // NOI18N
         btnEditarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnEditarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditarClienteActionPerformed(evt);
             }
         });
-        add(btnEditarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 380, -1, -1));
+        add(btnEditarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 320, 50, 50));
 
-        btnEliminarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/eliminar.png"))); // NOI18N
+        btnEliminarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/eliminar_1.png"))); // NOI18N
         btnEliminarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnEliminarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarClienteActionPerformed(evt);
             }
         });
-        add(btnEliminarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 370, -1, -1));
+        add(btnEliminarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 320, 50, 50));
 
-        btnNuevoCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/nuevo.png"))); // NOI18N
+        btnNuevoCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/menos.png"))); // NOI18N
         btnNuevoCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnNuevoCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNuevoClienteActionPerformed(evt);
             }
         });
-        add(btnNuevoCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 320, -1, -1));
-        add(txtIdCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 250, -1, -1));
+        add(btnNuevoCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 320, 50, 50));
+        add(txtIdCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 50, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void TableClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableClienteMouseClicked
@@ -141,20 +182,87 @@ public class tab2 extends javax.swing.JPanel {
     }//GEN-LAST:event_TableClienteMouseClicked
 
     private void btnGuardarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarClienteActionPerformed
-
+        if(!"".equals(txtDNICliente.getText()) || !"".equals(txtNombreCliente.getText()) || !"".equals(txtTelefonoCliente.getText()) || !"".equals(txtDireccionCliente.getText())){
+            cl.setDni(txtDNICliente.getText());
+            cl.setNombre(txtNombreCliente.getText());
+            cl.setTelefono(Integer.parseInt(txtTelefonoCliente.getText()));
+            cl.setDireccion(txtDireccionCliente.getText());
+            cl.setRazon(txtRazonCliente.getText());
+            try {
+                client.RegistrarCliente(cl);
+                JOptionPane.showMessageDialog(null, "Cliente Guardado");
+                LimpiarTable();
+                LimpiarCliente();
+                ListarCliente();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            JOptionPane.showMessageDialog(null, "Cliente registrado");
+        }else{
+            JOptionPane.showMessageDialog(null, "Los campos están vacios");
+        }
     }//GEN-LAST:event_btnGuardarClienteActionPerformed
 
     private void btnEditarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarClienteActionPerformed
-
+        if("".equals(txtIdCliente.getText())){
+            JOptionPane.showMessageDialog(null,"Seleccione una fila");
+        }else{
+            if(!"".equals(txtDNICliente.getText()) || !"".equals(txtNombreCliente.getText()) || !"".equals(txtTelefonoCliente.getText()) || !"".equals(txtDireccionCliente.getText())){
+                cl.setDni(txtDNICliente.getText());
+                cl.setNombre(txtNombreCliente.getText());
+                cl.setTelefono(Integer.parseInt(txtTelefonoCliente.getText()));
+                cl.setDireccion(txtDireccionCliente.getText());
+                cl.setRazon(txtRazonCliente.getText());
+                cl.setId(Integer.parseInt(txtIdCliente.getText()));
+                try {
+                    client.ModificarCliente(cl);
+                    JOptionPane.showMessageDialog(null, "Cliente Modificado");
+                    LimpiarTable();
+                    LimpiarCliente();
+                    ListarCliente();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Hay campos vacíos");
+            }
+        }
     }//GEN-LAST:event_btnEditarClienteActionPerformed
 
     private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
-
+        if(!"".equals(txtIdCliente.getText())){
+            int pregunta = JOptionPane.showConfirmDialog(null, "¿Estas seguro que quieres eliminarlo?");
+            if(pregunta == 0){
+                int id = Integer.parseInt(txtIdCliente.getText());
+                try {
+                    client.EliminarCliente(id);
+                    LimpiarTable();
+                    LimpiarCliente();
+                    ListarCliente();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }//GEN-LAST:event_btnEliminarClienteActionPerformed
 
     private void btnNuevoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoClienteActionPerformed
-
+        LimpiarCliente();
     }//GEN-LAST:event_btnNuevoClienteActionPerformed
+
+    public JTable getTableCliente() {
+        return TableCliente;
+    }
+
+    public void setTableCliente(JTable TableCliente) {
+        this.TableCliente = TableCliente;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -176,4 +284,36 @@ public class tab2 extends javax.swing.JPanel {
     private javax.swing.JTextField txtRazonCliente;
     private javax.swing.JTextField txtTelefonoCliente;
     // End of variables declaration//GEN-END:variables
+
+    public void LimpiarCliente(){
+        txtIdCliente.setText("");
+        txtDNICliente.setText("");
+        txtNombreCliente.setText("");
+        txtTelefonoCliente.setText("");
+        txtDireccionCliente.setText("");
+        txtRazonCliente.setText("");
+    }
+    
+    public void ListarCliente() throws ClassNotFoundException{
+        List<Cliente> ListarCl = client.ListarClientes();
+        modelo = (DefaultTableModel) getTableCliente().getModel();
+        Object[] ob = new Object[6];
+        for(int i=0; i<ListarCl.size(); i++){
+            ob[0] = ListarCl.get(i).getId();
+            ob[1] = ListarCl.get(i).getDni();
+            ob[2] = ListarCl.get(i).getNombre();
+            ob[3] = ListarCl.get(i).getTelefono();
+            ob[4] = ListarCl.get(i).getDireccion();
+            ob[5] = ListarCl.get(i).getRazon();
+            modelo.addRow(ob);
+        }
+        getTableCliente().setModel(modelo);
+    }
+    
+    public void LimpiarTable(){
+        int aux = modelo.getRowCount();
+        for(int i=0; i<aux; aux--){
+            modelo.removeRow(aux-1);
+        }
+    }
 }

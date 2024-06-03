@@ -4,17 +4,49 @@
  */
 package Vista;
 
+import Modelo.Cliente;
+import Modelo.ClienteDao;
+import Modelo.Detalle;
+import Modelo.Productos;
+import Modelo.ProductosDao;
+import Modelo.Proveedor;
+import Modelo.ProveedorDao;
+import Modelo.Venta;
+import Modelo.VentaDao;
+import Controlador.Excel;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ivant
  */
 public class tab4 extends javax.swing.JPanel {
 
-    /**
-     * Creates new form tab4
-     */
-    public tab4() {
+    Cliente cl = new Cliente();
+    ClienteDao client = new ClienteDao();
+    Proveedor pr = new Proveedor();
+    ProveedorDao prDao = new ProveedorDao();
+    Productos pro = new Productos();
+    ProductosDao proDao = new ProductosDao();
+    Venta v = new Venta();
+    VentaDao vDao = new VentaDao();
+    Detalle dv = new Detalle();
+    DefaultTableModel modelo = new DefaultTableModel();
+    DefaultTableModel tmp = new DefaultTableModel();
+    int item;
+    
+    public tab4() throws ClassNotFoundException, SQLException {
         initComponents();
+        proDao.ConsultarProveedor(cbxProveedorPro);
+        LimpiarTable();
+        ListarProductos();
+        txtIdpro.setVisible(false);
     }
 
     /**
@@ -45,29 +77,40 @@ public class tab4 extends javax.swing.JPanel {
         btnExcelPro = new javax.swing.JButton();
         txtIdpro = new javax.swing.JTextField();
 
+        setOpaque(false);
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel22.setText("CÓDIGO:");
-        add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 30, -1, -1));
+        jLabel22.setFont(new java.awt.Font("Raleway", 1, 16)); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel22.setText("Código:");
+        add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
 
-        jLabel23.setText("DESCRIPCIÓN:");
-        add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, -1, -1));
+        jLabel23.setFont(new java.awt.Font("Raleway", 1, 16)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel23.setText("Descripción:");
+        add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, -1, -1));
 
-        jLabel24.setText("CANTIDAD:");
-        add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 70, -1, -1));
+        jLabel24.setFont(new java.awt.Font("Raleway", 1, 16)); // NOI18N
+        jLabel24.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel24.setText("Cantidad:");
+        add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
 
-        jLabel25.setText("PRECIO:");
-        add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 70, -1, -1));
+        jLabel25.setFont(new java.awt.Font("Raleway", 1, 16)); // NOI18N
+        jLabel25.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel25.setText("Precio::");
+        add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, -1));
 
-        jLabel26.setText("PROVEEDOR");
-        add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 110, -1, -1));
+        jLabel26.setFont(new java.awt.Font("Raleway", 1, 16)); // NOI18N
+        jLabel26.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel26.setText("Proveedor:");
+        add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, -1, -1));
 
         cbxProveedorPro.setEditable(true);
-        add(cbxProveedorPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 160, -1, -1));
-        add(txtPrecioPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, -1, -1));
-        add(txtCodigoPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 110, -1, -1));
-        add(txtDespro, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 20, -1, -1));
-        add(txtCantPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 170, -1, -1));
+        add(cbxProveedorPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 180, 110, -1));
+        add(txtPrecioPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 100, 70, -1));
+        add(txtCodigoPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, 90, -1));
+        add(txtDespro, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 220, 110, -1));
+        add(txtCantPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 140, 70, -1));
 
         TableProducto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -83,44 +126,47 @@ public class tab4 extends javax.swing.JPanel {
             }
         });
         jScrollPane4.setViewportView(TableProducto);
+        if (TableProducto.getColumnModel().getColumnCount() > 0) {
+            TableProducto.getColumnModel().getColumn(0).setMaxWidth(25);
+        }
 
-        add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, -1, -1));
+        add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 50, 630, 350));
 
-        btnGuardarPro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/GuardarTodo.png"))); // NOI18N
+        btnGuardarPro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/agregar-archivo.png"))); // NOI18N
         btnGuardarPro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarProActionPerformed(evt);
             }
         });
-        add(btnGuardarPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 220, -1, -1));
+        add(btnGuardarPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, 50, 50));
 
-        btnEditarPro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Actualizar (2).png"))); // NOI18N
+        btnEditarPro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/editar.png"))); // NOI18N
         btnEditarPro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditarProActionPerformed(evt);
             }
         });
-        add(btnEditarPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 220, -1, -1));
+        add(btnEditarPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 270, 50, 50));
 
-        btnEliminarPro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/eliminar.png"))); // NOI18N
+        btnEliminarPro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/eliminar_1.png"))); // NOI18N
         btnEliminarPro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarProActionPerformed(evt);
             }
         });
-        add(btnEliminarPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, -1, -1));
+        add(btnEliminarPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 340, 50, 50));
 
-        btnNuevoPro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/nuevo.png"))); // NOI18N
-        add(btnNuevoPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 240, -1, -1));
+        btnNuevoPro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/menos.png"))); // NOI18N
+        add(btnNuevoPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 270, 50, 50));
 
-        btnExcelPro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/excel.png"))); // NOI18N
+        btnExcelPro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/sobresalir.png"))); // NOI18N
         btnExcelPro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExcelProActionPerformed(evt);
             }
         });
-        add(btnExcelPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, -1, -1));
-        add(txtIdpro, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, -1));
+        add(btnExcelPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 340, 50, 50));
+        add(txtIdpro, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 40, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void TableProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableProductoMouseClicked
@@ -134,21 +180,78 @@ public class tab4 extends javax.swing.JPanel {
     }//GEN-LAST:event_TableProductoMouseClicked
 
     private void btnGuardarProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarProActionPerformed
-
+        if(!"".equals(txtCodigoPro.getText()) || !"".equals(txtDespro.getText()) || !"".equals(cbxProveedorPro.getSelectedItem()) || !"".equals(txtCantPro.getText()) || !"".equals(txtPrecioPro.getText())){
+            pro.setCodigo(txtCodigoPro.getText());
+            pro.setNombre(txtDespro.getText());
+            pro.setProveedor(cbxProveedorPro.getSelectedItem().toString());
+            pro.setStock(Integer.parseInt(txtCantPro.getText()));
+            pro.setPrecio(Double.parseDouble(txtPrecioPro.getText()));
+            try {
+                proDao.RegistrarProductos(pro);
+                JOptionPane.showMessageDialog(null, "Producto registrado");
+                LimpiarTable();
+                ListarProductos();
+                LimpiarProductos();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Los campos están vacios");
+        }
     }//GEN-LAST:event_btnGuardarProActionPerformed
 
     private void btnEditarProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarProActionPerformed
-
+        if("".equals(txtIdpro.getText())){
+            JOptionPane.showMessageDialog(null,"Seleccione una fila");
+        }else{
+            if(!"".equals(txtCodigoPro.getText()) || !"".equals(txtDespro.getText()) || !"".equals(cbxProveedorPro.getSelectedItem()) || !"".equals(txtCantPro.getText()) || !"".equals(txtPrecioPro.getText())){
+                pro.setCodigo(txtCodigoPro.getText());
+                pro.setNombre(txtDespro.getText());
+                pro.setProveedor(cbxProveedorPro.getSelectedItem().toString());
+                pro.setStock(Integer.parseInt(txtCantPro.getText()));
+                pro.setPrecio(Double.parseDouble(txtPrecioPro.getText()));
+                pro.setId(Integer.parseInt(txtIdpro.getText()));
+                try {
+                    proDao.ModificarProductos(pro);
+                    JOptionPane.showMessageDialog(null, "Producto Modificado");
+                    LimpiarTable();
+                    LimpiarProductos();
+                    ListarProductos();
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Hay campos vacíos");
+            }
+        }
     }//GEN-LAST:event_btnEditarProActionPerformed
 
     private void btnEliminarProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProActionPerformed
-
+        if(!"".equals(txtIdpro.getText())){
+            int pregunta = JOptionPane.showConfirmDialog(null, "¿Estas seguro que quieres eliminarlo?");
+            if(pregunta == 0){
+                try {
+                    int id = Integer.parseInt(txtIdpro.getText());
+                    proDao.EliminarProductos(id);
+                    LimpiarTable();
+                    ListarProductos();
+                    LimpiarProductos();
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Selecciona una fila");
+        }
     }//GEN-LAST:event_btnEliminarProActionPerformed
 
     private void btnExcelProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelProActionPerformed
-
+        try {
+            Excel.reporte();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Ssitema.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnExcelProActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable TableProducto;
@@ -170,4 +273,37 @@ public class tab4 extends javax.swing.JPanel {
     private javax.swing.JTextField txtIdpro;
     private javax.swing.JTextField txtPrecioPro;
     // End of variables declaration//GEN-END:variables
+   
+    public void LimpiarProductos(){
+        txtIdpro.setText("");
+        txtCodigoPro.setText("");
+        cbxProveedorPro.setSelectedItem("");
+        txtDespro.setText("");
+        txtCantPro.setText("");
+        txtPrecioPro.setText("");
+    }
+    
+    public void LimpiarTable(){
+        int aux = modelo.getRowCount();
+        for(int i=0; i<aux; aux--){
+            modelo.removeRow(aux-1);
+        }
+    }
+    
+    public void ListarProductos() throws ClassNotFoundException{
+        List<Productos> ListarPro = proDao.ListarProductos();
+        modelo = (DefaultTableModel) TableProducto.getModel();
+        Object[] ob = new Object[6];
+        for(int i=0; i<ListarPro.size(); i++){
+            ob[0] = ListarPro.get(i).getId();
+            ob[1] = ListarPro.get(i).getCodigo();
+            ob[2] = ListarPro.get(i).getNombre();
+            ob[3] = ListarPro.get(i).getProveedor();
+            ob[4] = ListarPro.get(i).getStock();
+            ob[5] = ListarPro.get(i).getPrecio();
+            modelo.addRow(ob);
+        }
+        TableProducto.setModel(modelo);
+    }
+
 }
